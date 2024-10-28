@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浪漫表白</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* 内容居中显示 */
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(45deg, #ff7e5f, #feb47b, #ff6a88, #ff9a44, #f8ff6f);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #flagContainer {
+            position: absolute;
+            top: 50px; /* 控制国旗在页面的高度 */
+            width: 600px; /* 设置国旗宽度 */
+            height: 400px; /* 设置国旗高度 */
+            z-index: 1; /* 确保国旗在上面 */
+        }
+
+        .large-flag {
+            width: 100%; /* 使国旗充满宽度 */
+            height: auto; /* 自适应高度 */
+            background: transparent; /* 使国旗背景透明 */
+        }
+
+        #upperBackground {
+            position: absolute;
+            top: 0; /* 设置上方背景的位置 */
+            width: 100%;
+            height: 50px; /* 控制上方背景高度 */
+            background: rgba(255, 255, 255, 0.5); /* 半透明背景 */
+            z-index: 0; /* 确保在国旗下面 */
+        }
+
+        #quotesContainer {
+            margin-top: 450px; /* 留出国旗的空间 */
+            z-index: 2; /* 确保句子在国旗上方显示 */
+            text-align: center; /* 句子居中显示 */
+            background: rgba(255, 255, 255, 0.7); /* 句子区域的背景颜色 */
+            padding: 20px; /* 添加内边距 */
+            border-radius: 10px; /* 添加圆角 */
+        }
+
+        .quote {
+            font-size: 20px;
+            opacity: 0;
+            animation: fade-in 2s forwards, float 4s ease-in-out infinite;
+            margin: 20px 0; /* 添加上下间距 */
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .small-flag {
+            width: 20px; /* 小国旗宽度 */
+            margin-right: 10px; /* 小国旗与文本之间的间距 */
+        }
+
+        .star {
+            animation: blink 1.5s infinite;
+            fill: #ffb400; /* 星星的颜色 */
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .quote {
+                font-size: 16px; /* 小屏幕时缩小字体 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="upperBackground"></div> <!-- 上方的独立背景 -->
+    <div id="flagContainer">
+        <svg class="large-flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+            <rect width="600" height="400" fill="#c8102e"/> <!-- 背景红色 -->
+            <polygon class="star" points="300,150 316,200 370,200 324,225 340,275 300,250 260,275 276,225 230,200 284,200" />
+        </svg>
+    </div>
+    <div id="quotesContainer"></div>
+
+    <script>
+        const quotes = [
+            "Em là cả thế giới của anh. | 你是我整个世界。",
+            "Mỗi ngày bên em đều là một giấc mơ. | 每天和你在一起都是一种梦。",
+            "Anh sẽ mãi mãi ở bên em. | 我会永远陪伴着你。",
+            "Yêu em là điều tuyệt nhất trong cuộc đời anh. | 爱你是我生命中最美好的事情。",
+            "Em làm cho trái tim anh đập nhanh hơn. | 你让我的心跳加速。",
+            "Anh thích cách em cười. | 我喜欢你微笑的样子。",
+            "Em là lý do anh thức dậy mỗi sáng. | 你是我每天早上起床的理由。",
+            "Chỉ cần có em, anh cảm thấy đủ. | 有你在身边，我就满足了。",
+            "Em là bông hoa đẹp nhất trong vườn hoa của anh. | 你是我花园中最美丽的花。",
+            "Tình yêu của anh dành cho em không có giới hạn. | 我对你的爱是无止境的。",
+            "Em là ngọn lửa trong trái tim anh. | 你是我心中的火焰。",
+            "Mỗi khoảnh khắc bên em đều quý giá. | 每一刻与你在一起都无比珍贵。",
+            "Em là ánh sáng dẫn đường cho anh. | 你是我前行的光。",
+            "Anh sẽ bảo vệ em mãi mãi. | 我会永远保护你。",
+            "Em là giấc mơ mà anh không muốn tỉnh dậy. | 你是我不想醒来的梦。",
+            "Tình yêu của anh dành cho em càng ngày càng lớn. | 我对你的爱与日俱增。",
+            "Em là hạnh phúc của anh. | 你是我的幸福。",
+            "Anh yêu tất cả những gì về em. | 我爱你的一切。",
+            "Cuộc sống của anh đẹp hơn khi có em bên cạnh. | 有你在身边，我的生活更加美好。",
+            "Em là một phần không thể thiếu trong cuộc sống của anh. | 你是我生活中不可或缺的一部分。"
+        ];
+
+        const quotesContainer = document.getElementById('quotesContainer');
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function displayQuotes() {
+            quotes.forEach((quote, i) => {
+                setTimeout(() => {
+                    const quoteDiv = document.createElement('div');
+                    quoteDiv.className = 'quote';
+                    quoteDiv.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1200px-Flag_of_Vietnam.svg.png" class="small-flag" alt="Vietnam Flag">${quote}`;
+                    quoteDiv.style.color = getRandomColor();
+
+                    quotesContainer.appendChild(quoteDiv);
+
+                    // 逐渐显示当前句子
+                    quoteDiv.style.opacity = 1;
+                }, i * 4000); // 每句相隔4秒出现
+            });
+        }
+
+        // 开始显示句子
+        displayQuotes();
+    </script>
+</body>
+</html>
